@@ -15,8 +15,6 @@ sui_objects=$(curl -s -X POST -H "Content-Type: application/json" -d '{
     ]
 }' https://rpc.mainnet.sui.io/ | jq -r '.result.data')
 
-echo $sui_objects | jq
-
 first_sui_object=$(echo "${sui_objects}" | jq -r '.[0] | .data.objectId')
 echo "Merging SUI objects to: ${first_sui_object}"
 
@@ -24,5 +22,5 @@ echo "Merging SUI objects to: ${first_sui_object}"
 # TODO: this can actually be executed with a single transaction block.
 echo "${sui_objects}" | jq -r '.[1:] | .[] | .data.objectId' | while read sui_object_id; do
     echo "Merging staked SUI object: ${sui_object_id}"
-    sui client merge-coin --primary-coin "${first_sui_object}" --coin-to-merge "${sui_object_id}" --gas-budget 20000000
+    sui client merge-coin --primary-coin "${first_sui_object}" --coin-to-merge "${sui_object_id}" --gas-budget "${DEFAULT_GAS_BUDGET}"
 done
