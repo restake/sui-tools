@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+rpc_url="https://rpc.${SUI_NETWORK}.sui.io/"
+
 sui_objects=$(curl -s -X POST -H "Content-Type: application/json" -d '{
     "method": "suix_getOwnedObjects",
     "jsonrpc": "2.0",
@@ -13,7 +15,7 @@ sui_objects=$(curl -s -X POST -H "Content-Type: application/json" -d '{
             }
         }
     ]
-}' https://rpc.mainnet.sui.io/ | jq -r '.result.data')
+}' "${rpc_url}" | jq -r '.result.data')
 
 first_sui_object=$(echo "${sui_objects}" | jq -r '.[0] | .data.objectId')
 echo "Merging SUI objects to: ${first_sui_object}"

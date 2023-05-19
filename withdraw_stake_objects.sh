@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+rpc_url="https://rpc.${SUI_NETWORK}.sui.io/"
+
 stake_objects=$(curl -s -X POST -H "Content-Type: application/json" -d '{
     "method": "suix_getStakes",
     "jsonrpc": "2.0",
@@ -8,7 +10,7 @@ stake_objects=$(curl -s -X POST -H "Content-Type: application/json" -d '{
     "params": {
         "owner": "'${VALIDATOR_ADDRESS}'"
     }
-}' https://rpc.mainnet.sui.io/ | jq -r '.result | to_entries[] | select(.value.validatorAddress == "'${VALIDATOR_ADDRESS}'") | .value.stakes')
+}' "${rpc_url}"| jq -r '.result | to_entries[] | select(.value.validatorAddress == "'${VALIDATOR_ADDRESS}'") | .value.stakes')
 
 # Withdraw all staked SUI objects, one by one.
 echo "${stake_objects}" | jq -r '.[] | .stakedSuiId' | while read staked_sui_id; do
