@@ -16,4 +16,5 @@ stake_objects=$(curl -s -X POST -H "Content-Type: application/json" -d '{
 echo "${stake_objects}" | jq -r '.[] | .stakedSuiId' | while read staked_sui_id; do
     echo "Withdrawing staked SUI object: ${staked_sui_id}"
     sui client call --package 0x3 --module sui_system --function request_withdraw_stake --args 0x5 "${staked_sui_id}" --gas-budget "${DEFAULT_GAS_BUDGET}"
+    sleep 1
 done
