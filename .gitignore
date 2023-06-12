@@ -1,4 +1,4 @@
-.envrc.sample
+.envrc.local
 .DS_Store
 .vscode
 sui.log*
